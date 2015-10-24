@@ -29,7 +29,8 @@ class SplitPaneCommand(sublime_plugin.WindowCommand):
                 w.run_command('set_layout', LAYOUT_HORIZONTAL)
             else:
                 raise Exception('SplitPanes: Unknown orientation "%s"' % (orientation,))
-            w.focus_group(0)
-            w.run_command('move_to_group', {'group': 1})
+            if len(w.views()) > 1:
+                w.focus_group(0)
+                w.run_command('move_to_group', {'group': 1})
         else:
             w.run_command('set_layout', LAYOUT_NORMAL)
