@@ -1,5 +1,13 @@
 import sublime_plugin
 
+"""
+  Key Bindings:
+
+    { "keys": ["super+alt+v"], "command": "split_pane", "args": {"orientation": "vertical"} },
+    { "keys": ["super+alt+h"], "command": "split_pane", "args": {"orientation": "horizontal"} }
+
+"""
+
 LAYOUT_NORMAL = {
     'cols': [0.0, 1.0],
     'rows': [0.0, 1.0],
