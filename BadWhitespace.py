@@ -48,9 +48,6 @@ class BadWhitespaceListener(sublime_plugin.EventListener):
     def on_modified_async(self, view):
         highlight_whitespace(view)
 
-    def on_activated_async(self, view):
-        highlight_whitespace(view)
-
     def on_load_async(self, view):
         highlight_whitespace(view)
 
