@@ -26,8 +26,11 @@ def highlight_whitespace(view, ignore_current_line=True):
     # clear any previous regions
     view.erase_regions('BadWhitespaceListener')
 
-    # get the current line
-    selection = view.sel()[0]
+    try:
+        # get the current line
+        selection = view.sel()[0]
+    except IndexError:
+        return
     line = view.line(selection.b)
 
     if ignore_current_line:
