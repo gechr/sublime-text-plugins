@@ -20,7 +20,7 @@ class CamelScoreCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         for region in self.view.sel():
             if region.empty():
-                continue
+                region = self.view.word(region.a)
             word = self.view.substr(region)
             if self._is_snake_case(word):
                 word = self._snake_to_camel(word)
