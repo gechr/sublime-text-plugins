@@ -3,11 +3,21 @@ import subprocess
 
 import sublime, sublime_plugin
 
+PLUGIN_NAME = 'Terraform'
+
 TERRAFORM_SYNTAX_FILE = 'Packages/Terraform/Terraform.tmLanguage'
 PLAIN_TEXT_SYNTAX_FILE = 'Packages/Text/Plain text.tmLanguage'
 
 TERRAFORM_FMT_COMMAND = 'terraform fmt -no-color -'
-TERRAFORM_FMT_ERROR_REGEX = re.compile(r'^Error running fmt: At (?P<lineno>\d+):(?P<colno>\d+): ')
+TERRAFORM_FMT_ERROR_REGEX = re.compile(r'^Error running fmt:(?: In [^:]+:)? At (?P<lineno>\d+):(?P<colno>\d+): ')
+
+ERR_NO_MATCH = '''
+{}: Could not match error message!
+
+[Message]
+{}
+[Pattern]
+{}'''
 
 class TerraformatCommand(sublime_plugin.TextCommand):
 
@@ -35,6 +45,9 @@ class TerraformatCommand(sublime_plugin.TextCommand):
             view.set_status('terraformat_errors', message)
             # Scroll to the error
             view.show(error_point)
+            return
+        err = ERR_NO_MATCH.format(PLUGIN_NAME, message, TERRAFORM_FMT_ERROR_REGEX.pattern)
+        sublime.error_message(err)
 
     def _terraform_fmt(self, edit, start, end):
         p = subprocess.Popen(TERRAFORM_FMT_COMMAND,
