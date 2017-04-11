@@ -5,7 +5,7 @@ import sublime, sublime_plugin
 
 PLUGIN_NAME = 'Terraform'
 
-TERRAFORM_SYNTAX_FILE = 'Packages/Terraform/Terraform.tmLanguage'
+TERRAFORM_SYNTAX_FILE = 'Packages/Terraform/Terraform.sublime-syntax'
 PLAIN_TEXT_SYNTAX_FILE = 'Packages/Text/Plain text.tmLanguage'
 
 TERRAFORM_FMT_COMMAND = 'terraform fmt -no-color -'
