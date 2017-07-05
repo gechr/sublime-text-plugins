@@ -17,7 +17,7 @@ class DuplicateCountCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         try:
-            duplicate_count = int(text)
+            duplicate_count = int(text) - 1
             if self.window.active_view():
                 self.window.active_view().run_command('duplicate', {'count': duplicate_count})
         except ValueError:
