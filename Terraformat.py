@@ -80,3 +80,9 @@ class TerraformatCommand(sublime_plugin.TextCommand):
             return
         # Format the entire file
         self._terraform_fmt(edit, 0, self.view.size())
+
+class TerraformatOnSaveListener(sublime_plugin.EventListener):
+    def on_pre_save(self, view):
+        current_syntax_file = view.settings().get('syntax')
+        if current_syntax_file == TERRAFORM_SYNTAX_FILE:
+            sublime.active_window().run_command('terraformat')
