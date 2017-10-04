@@ -19,6 +19,20 @@ ERR_NO_MATCH = '''
 [Pattern]
 {}'''
 
+def _is_terraform(view, plaintext_to_terraform=False):
+    current_syntax_file = view.settings().get('syntax')
+    if plaintext_to_terraform and current_syntax_file == PLAIN_TEXT_SYNTAX_FILE:
+        view.set_syntax_file(TERRAFORM_SYNTAX_FILE)
+        return True
+    if current_syntax_file == TERRAFORM_SYNTAX_FILE:
+        return True
+    return False
+
+class Terraformat(sublime_plugin.EventListener):
+    def on_pre_save(self, view):
+        if _is_terraform(view):
+            view.run_command('terraformat')
+
 class TerraformatCommand(sublime_plugin.TextCommand):
 
     def _highlight_error(self, message):
@@ -71,12 +85,7 @@ class TerraformatCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         self.view.erase_regions('terraformat_errors')
-        current_syntax_file = self.view.settings().get('syntax')
-        # If the syntax is set to "Plain Text", assume we want to set it to "Terraform"
-        if current_syntax_file == PLAIN_TEXT_SYNTAX_FILE:
-            self.view.set_syntax_file(TERRAFORM_SYNTAX_FILE)
-        # If the syntax is not "Terraform", do nothing
-        elif current_syntax_file != TERRAFORM_SYNTAX_FILE:
+        if not _is_terraform(self.view, plaintext_to_terraform=True):
             return
         # Format the entire file
         self._terraform_fmt(edit, 0, self.view.size())
