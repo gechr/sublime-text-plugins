@@ -43,7 +43,7 @@ def highlight_whitespace(view, ignore_current_line=True):
     if bad_regions:
         view.add_regions('BadWhitespaceListener',
                          bad_regions,
-                         'meta.whitespace.mixed',
+                         'invalid.illegal',
                          '',
                          sublime.DRAW_EMPTY)
 
