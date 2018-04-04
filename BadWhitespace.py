@@ -2,7 +2,6 @@ import sublime, sublime_plugin
 
 # 0.5 mebibytes = 512^2 bytes = 524288 bytes
 DEFAULT_MAX_FILE_SIZE = 524288
-
 """
   super regex to detect:
 
@@ -13,10 +12,13 @@ DEFAULT_MAX_FILE_SIZE = 524288
 """
 BAD_WHITESPACE_RE = r'\\?(?:[\t ]+$|\t +| +\t+ *|(?!^)(?<!\t)\t+)'
 
+
 def _file_too_large(view):
     if view.size() > DEFAULT_MAX_FILE_SIZE:
-        sublime.status_message("File too large - BadWhitespace plugin disabled.")
+        sublime.status_message(
+            "File too large - BadWhitespace plugin disabled.")
         return True
+
 
 def highlight_whitespace(view, ignore_current_line=True):
     # stop if the file is too large or it's a scratch view
@@ -26,28 +28,28 @@ def highlight_whitespace(view, ignore_current_line=True):
     # clear any previous regions
     view.erase_regions('BadWhitespaceListener')
 
-    try:
-        # get the current line
-        selection = view.sel()[0]
-    except IndexError:
-        return
-    line = view.line(selection.b)
-
     if ignore_current_line:
-        bad_regions = [r for r in view.find_all(BAD_WHITESPACE_RE)
-                       if not r.intersects(line)]
+        try:
+            # get the current line
+            selection = view.sel()[0]
+        except IndexError:
+            return
+        line = view.line(selection.b)
+        bad_regions = [
+            r for r in view.find_all(BAD_WHITESPACE_RE)
+            if not r.intersects(line)
+        ]
     else:
         bad_regions = view.find_all(BAD_WHITESPACE_RE)
 
     # actually highlight the regions
     if bad_regions:
-        view.add_regions('BadWhitespaceListener',
-                         bad_regions,
-                         'invalid.illegal',
-                         '',
-                         sublime.DRAW_EMPTY)
+        view.add_regions('BadWhitespaceListener', bad_regions,
+                         'invalid.illegal', '', sublime.DRAW_EMPTY)
+
 
 class BadWhitespaceListener(sublime_plugin.EventListener):
+
     def on_modified_async(self, view):
         highlight_whitespace(view)
 
