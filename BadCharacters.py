@@ -17,7 +17,7 @@ SPACELESS_RE = ('\u007F-\u009F'
 SPACEY_RE = ('\u00A0' '\u2000-\u200A' '\u202F' '\u205F' '\u2800' '\u3000')
 
 # Whitelisted characters
-WHITELIST = '£€%©®™'
+WHITELIST = '£€%©®™%'
 
 INVALID_RE = r'[^\x00-\x7F' + WHITELIST + SPACELESS_RE + SPACEY_RE + ']'
 ZEROWIDTH_RE = r'[' + SPACELESS_RE + SPACEY_RE + ']'
