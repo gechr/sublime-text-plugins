@@ -1,8 +1,9 @@
 import sublime, sublime_plugin
 
+
 class UnquoteSelectionCommand(sublime_plugin.TextCommand):
 
-    QUOTE_CHARS = ("'", '"', '`')
+    QUOTE_CHARS = ("'", '"', "`")
 
     def run(self, edit):
         view = self.view
@@ -16,4 +17,6 @@ class UnquoteSelectionCommand(sublime_plugin.TextCommand):
                 view.erase(edit, sublime.Region(begin, begin + 1))
 
     def _is_quoted(self, text):
-        return len(text) > 2 and any([q for q in self.QUOTE_CHARS if text.startswith(q) and text.endswith(q)])
+        return len(text) > 2 and any(
+            [q for q in self.QUOTE_CHARS if text.startswith(q) and text.endswith(q)]
+        )

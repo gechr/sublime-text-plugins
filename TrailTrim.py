@@ -1,5 +1,6 @@
 import sublime_plugin
 
+
 class TrailTrimCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         trailing = self.view.find_all("[\t ]+$")
