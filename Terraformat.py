@@ -10,7 +10,7 @@ PLAIN_TEXT_SYNTAX_FILE = "Packages/Text/Plain text.tmLanguage"
 
 TERRAFORM_FMT_COMMAND = "terraform fmt -no-color -"
 TERRAFORM_FMT_ERROR_REGEX = re.compile(
-    r"^Error running fmt:(?: In [^:]+:)? At (?P<lineno>\d+):(?P<colno>\d+): "
+    r"^\s*Error: (?P<message>.+?)\s+on <stdin> line (?P<lineno>\d+):"
 )
 
 ERR_NO_MATCH = """
@@ -44,11 +44,10 @@ class TerraformatCommand(sublime_plugin.TextCommand):
         if m:
             view = self.view
             sel = view.sel()
+            msg = m.group("message")
             line = int(m.group("lineno")) - 1
-            column = int(m.group("colno")) - 1
-
             # Convert line & column to a text point (for seeking)
-            error_point = view.text_point(line, column)
+            error_point = view.text_point(line, 0)
             # Clear any current selections
             sel.clear()
             # Convert the text point to a region
@@ -66,7 +65,7 @@ class TerraformatCommand(sublime_plugin.TextCommand):
                 sublime.DRAW_OUTLINED,
             )
             # Set the error text in the status bar
-            view.set_status("terraformat_errors", message)
+            view.set_status("terraformat_errors", msg)
             # Scroll to the error
             view.show(error_point)
             return
