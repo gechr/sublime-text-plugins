@@ -8,9 +8,9 @@ PLUGIN_NAME = "Terraform"
 TERRAFORM_SYNTAX_FILE = "Packages/Terraform/Terraform.sublime-syntax"
 PLAIN_TEXT_SYNTAX_FILE = "Packages/Text/Plain text.tmLanguage"
 
-TERRAFORM_FMT_COMMAND = "terraform fmt -no-color -"
+TERRAFORM_FMT_COMMAND = "terrafmt -"
 TERRAFORM_FMT_ERROR_REGEX = re.compile(
-    r"^\s*Error: (?P<message>.+?)\s+on <stdin> line (?P<lineno>\d+):"
+    r"^<stdin>:(?P<linestart>\d+),(?P<colstart>\d+)-(?P<colend>\d+)(,(?P<lineend>\d+))?: (?P<message>.+?)$"
 )
 
 ERR_NO_MATCH = """
@@ -45,9 +45,10 @@ class TerraformatCommand(sublime_plugin.TextCommand):
             view = self.view
             sel = view.sel()
             msg = m.group("message")
-            line = int(m.group("lineno")) - 1
+            line = int(m.group("linestart")) - 1
+            colstart = int(m.group("colstart")) - 1
             # Convert line & column to a text point (for seeking)
-            error_point = view.text_point(line, 0)
+            error_point = view.text_point(line, colstart)
             # Clear any current selections
             sel.clear()
             # Convert the text point to a region
